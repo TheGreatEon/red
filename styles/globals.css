@@ -23,9 +23,11 @@ select {
   font: inherit;
 }
 
+
+
 :root {
-  --black: #1c1e21;
-  --white: #ffffff;
+  --black: #ffffff;
+  --white: #000;
   --tw-color1: #a855f7;
   --tw-color1-hover: #9333ea;
 }
