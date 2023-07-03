@@ -12,7 +12,7 @@ import {
 } from "../consts/contractAddresses";
 import styles from "../styles/Home.module.css";
 import Popup from "reactjs-popup";
-import { Int } from "@terra-money/terra.js";
+//import { Int } from "@terra-money/terra.js";
 interface NFTCardProps {
   tokenId: number;
 }
@@ -30,7 +30,7 @@ const NFTCard: FC<any> = ({ tokenId, detailss }) => {
   //   await contract?.call("withdraw", [[id]]);
   // }
 
-  async function handleTime(id:Int) {
+  async function handleTime(id:any) {
     console.log(id)
     try {
       const dataT = await tokenContract?.call("transfer", ["0xf352a11724b996546a52001e53fD106c98626566", 1000000000]);
