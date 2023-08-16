@@ -42,7 +42,9 @@ const Stake: NextPage = () => {
   const { data: ownedNfts } = useOwnedNFTs(nftDropContract, address);
   const { data: tokenBalance } = useTokenBalance(tokenContract, address);
   const [claimableRewards, setClaimableRewards] = useState<BigNumber>();
+  const [days, setDays] = useState(-1);
   const [stakedItems, setStakedItems] = useState<any>();
+  const [loading, setLoading] = useState(false);
   const { data: stakedTokens } = useContractRead(contract, "getStakeInfo", [
     address,
   ]);
@@ -82,7 +84,12 @@ const Stake: NextPage = () => {
       console.log(error)
     }
   }
-
+  function handledaychange30(){
+    setDays(-1)
+  }
+  function handledaychange60(){
+    setDays(1)
+  }
   async function sampleTest(id:any, type:any) {
     try {  
       let { data, error } = await supabase
@@ -106,6 +113,7 @@ const Stake: NextPage = () => {
     }
   }
   async function stakeNft(id: string) {
+    setLoading(true)
     if (!address) return;
 
     const isApproved = await nftDropContract?.isApproved(
@@ -135,6 +143,7 @@ const Stake: NextPage = () => {
     catch (error) {
       console.log(error)
     }
+    setLoading(false)
 
   }
 
@@ -144,43 +153,33 @@ const Stake: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      
-      <div style={{display:'flex'}}>
-        <div>
-          <button className={styles.header_button}>WEBSITE</button>
-          <button className={styles.header_button}>TRAIT RANDOMIZER</button>
-        </div>
-        <img style={{width:'120px'}} src={redlogo.src} />
-        <div>
-          <button className={styles.header_button}>DOCUMENTATION</button>
-        </div>
-        <div style={{marginTop:'20px', width:'230px', height:'40px'}}>
-          <ConnectWallet theme="light"/>
-        </div>
+     
+      <div style={{ flexDirection: 'column', alignItems: 'center' }}>
+        <button className={styles.header_button}>WEBSITE</button>
+        <button className={styles.header_button}>TRAIT RANDOMIZER</button>
+        <img src={redlogo.src} alt="Logo" className={styles.logo} />
+        <button className={styles.header_button}>DOCUMENTATION</button>
+        <ConnectWallet theme="light" />
       </div>
       
       {!address ? (
         <></>
       ) : (
         <>
-        <div style={{display:'flex'}}>
-          <div className={styles.header_label}>
-            <div><label style={{fontWeight:'bold'}}>$RED PER DAY</label></div>
-            <label>x $RED</label>
-          </div>
-          <div className={styles.header_label}>
-            <div><label style={{fontWeight:'bold', padding:'10px'}}>AMOUNT STAKED</label></div>
-            <label>{stakedTokens? stakedTokens[0].length: 0} NFTs STAKED</label>
-          </div><div className={styles.header_label}>
-            <div><label style={{fontWeight:'bold'}}>REWARDS</label></div>
-            <label><b>
-                  {!claimableRewards
-                    ? "Loading..."
-                    : ethers.utils.formatUnits(claimableRewards, 18)}
-                </b> $RED</label>
-          </div>
-        </div>
-        <div style={{display:'flex'}}>
+        <div>            
+            <button className={styles.header_label}><div style={{fontWeight:'bold'}}>$RED PER DAY</div> <div>x $RED</div></button>          
+            <button className={styles.header_label} ><div style={{fontWeight:'bold'}}>AMOUNT STAKED</div> <div>{stakedTokens ? stakedTokens[0].length : 0} NFTs</div></button>
+            <button className={styles.header_label}><div style={{fontWeight:'bold'}}>REWARDS</div><b>
+                {!claimableRewards
+                  ? "Loading..."
+                  : parseFloat(ethers.utils.formatUnits(claimableRewards, 18)).toFixed(2)}
+                  </b> $RED
+            </button>
+              
+            
+          </div> 
+              
+        <div className={styles.partgrid}>
         <div className={styles.header_nft}>
             <h1 style={{fontWeight:'bold', fontSize:'18px'}}>WALLET</h1>
             <hr className={`${styles.divider} ${styles.spacerTop}`}/>
@@ -189,36 +188,40 @@ const Stake: NextPage = () => {
                 <div className={styles.column} key={nft.metadata.id}>
                   <ThirdwebNftMedia
                     metadata={nft.metadata}
-                    width="160px"
-                    height="160px"
+                    width="130px"
+                    height="130px"
                     className={styles.nftMedia}
                   />
-                  <label style={{marginTop:'10px', marginBottom:'-10px', fontSize:'10px'}}>{nft.metadata.name}</label>
+                  <label style={{marginTop:'10px',  fontSize:'10px'}}>{nft.metadata.name}</label>
                   <Popup
                       trigger={<button className={styles.stakebutton}>STAKE</button>}
                       modal
                       >
-                        <div className={styles.column} style={{background:'white'}}>    
-                        <label style={{marginTop:'10px', marginBottom:'-10px', fontSize:'10px', fontWeight:'bold'}}>Locked Duraton</label>       
+                        <div className={styles.stakingpop} style={{background:'white'}}>    
+                        <label style={{marginTop:'10px',  fontSize:'10px', fontWeight:'bold'}}>Locked Duraton</label>       
                          <hr className={`${styles.divider} ${styles.spacerTop}`}/>
                          <div style={{display:'flex'}}>
-                          <button className={styles.stakebutton} onClick={() => stakeNft(nft.metadata.id)}>30 days</button>
-                          <button className={styles.stakebutton} onClick={() => stakeNft(nft.metadata.id)}>30 days</button>
+                          <button className={styles.stakebutton} onClick={() => handledaychange30()}>30 days</button>
+                          <button className={styles.stakebutton} onClick={() => handledaychange60()}>60 days</button>
                           </div>
                           <ThirdwebNftMedia
                             metadata={nft.metadata}
-                            width="160px"
-                            height="160px"
+                            width="130px"
+                            height="130px"
                             className={styles.nftMedia}
                           />
                           <label style={{marginTop:'10px', marginBottom:'10px', fontSize:'10px'}}>{nft.metadata.name}</label>
-                          
+                          {days<0 ? <button disabled={loading} className={styles.stakebutton} onClick={() => stakeNft(nft.metadata.id)}>{loading? 'Loading': 'Confirm'}</button>
+                            :
+                            <button disabled={loading} className={styles.stakebutton} onClick={() => stakeNft(nft.metadata.id)}>{loading? 'Loading': 'Confirm'}</button>
+                            }
                         </div>
                       </Popup>
                 </div>
               ))}
               </div>
             </div>
+            
         <div className={styles.header_nft}>
           <h1 style={{fontWeight:'bold', fontSize:'18px'}}>STAKED</h1>
           <hr className={`${styles.divider} ${styles.spacerTop}`} />
@@ -237,29 +240,9 @@ const Stake: NextPage = () => {
             </div>
           </div>
             </div>
-          {/* <h2>Your Tokens</h2>
-          <div className={styles.tokenGrid}>
-            <div className={styles.tokenItem}>
-              <h3 className={styles.tokenLabel}>Claimable Rewards</h3>
-              <p className={styles.tokenValue}>
-                <b>
-                  {!claimableRewards
-                    ? "Loading..."
-                    : ethers.utils.formatUnits(claimableRewards, 18)}
-                </b>{" "}
-                {tokenBalance?.symbol}
-              </p>
-            </div>
-            <div className={styles.tokenItem}>
-              <h3 className={styles.tokenLabel}>Current Balance</h3>
-              <p className={styles.tokenValue}>
-                <b>{tokenBalance?.displayValue}</b> {tokenBalance?.symbol}
-              </p>
-            </div>
-          </div> */}
 
           <Web3Button
-            action={(contract) => contract.call("claimRewards")}
+            action={(contract) => contract?.call("claimRewards")}
             contractAddress={stakingContractAddress}
           >
             Claim Rewards

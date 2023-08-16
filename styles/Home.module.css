@@ -1,13 +1,8 @@
 .container {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   position: absolute;
-  padding: 24px;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .h1 {
@@ -28,25 +23,26 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
 }
+
 .header_label {
   color: #000;
+  width: 240px;
+  height: 80px;
   background-color: white;
   border: 1px;
-  width: 340px;
-  height: 80px;
   margin: 10px;
-  padding: 18px;
+  padding: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) inset;
   border-radius: 10px;
 }
+
 .header_nft {
   color: #000;
   background-color: white;
   border: 1px;
-  width: 540px;
   height: 460px;
   margin: 10px;
-  box-shadow: 2px 2px 1px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) inset;
+  box-shadow: 2px 2px 0.5px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) inset;
   border:  rgb(173, 173, 173) 1px;
   border-radius: 10px; 
 }
@@ -64,10 +60,18 @@
 
 .cardgrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
+  padding: 20px;
   max-height: 390px;
   overflow: auto;
+}
+
+.partgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+  gap: 10px;
 }
 
 .column {
@@ -75,7 +79,18 @@
   border: solid 1px rgb(17, 16, 16);
   border-radius: 10px;
   margin: 5px;
-  max-width: 162px;
+  max-width: 132px;
+  align-items: center;
+  flex-direction: column;
+}
+
+.stakingpop {
+  display: flex;
+  border: solid 1px rgb(17, 16, 16);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5px;
+  width: 242px;
   align-items: center;
   flex-direction: column;
 }
@@ -242,7 +257,7 @@
 }
 
 .nftMedia {
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 10px 10px;
 }
 
 .stakebutton {
@@ -282,4 +297,29 @@
   box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
   color: #8f9090;
   outline: 0;
+}
+
+.header {
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: white;
+}
+
+/* Logo Styles */
+.logocontainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.connectWallet {
+  margin: 10px;
+  justify-content: right;
+  display: flex;
 }

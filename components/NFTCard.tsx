@@ -64,19 +64,21 @@ const NFTCard: FC<any> = ({ tokenId, detailss }) => {
           {nft.metadata && (
             <ThirdwebNftMedia
               metadata={nft.metadata}
-              width="160px"
-              height="160px"
+              width="130px"
+              height="130px"
               className={styles.nftMedia}
             />
           )}
-          <label style={{marginTop:'10px', marginBottom:'-10px', fontSize:'10px'}}>{nft.metadata.name}</label>
+          <label style={{marginTop:'10px', fontSize:'10px'}}>{nft.metadata.name}</label>
           {/* <button className={styles.stakebutton} onClick={() => contract?.call("withdraw", [[nft.metadata.id]])}>UNSTAKE</button> */}
           {stakedDetails && stakedDetails['date']+1000*60*60*1*stakedDetails['type']>Date.now()? <button className={styles.stakebutton} onClick={() => handleTime(tokenId)}>Unlock</button>: 
           <Popup
             trigger={<button className={styles.stakebutton}>UNSTAKE</button>}
             modal
             >
-              <div className={styles.column} style={{background:'white'}}>
+              <div className={styles.stakingpop} style={{background:'white'}}>
+              <label style={{marginTop:'10px',  fontSize:'10px', fontWeight:'bold'}}>UnStake Item</label>       
+                <hr className={`${styles.divider} ${styles.spacerTop}`}/>
                 <ThirdwebNftMedia
                   metadata={nft.metadata}
                   width="160px"
